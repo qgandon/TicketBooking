@@ -1,0 +1,63 @@
+version: '3.1'
+
+services:
+
+  webapp:
+    container_name: webapp
+    build:
+      context: ./WebApp
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - orderms
+
+  orderms:
+    container_name: orderms
+    build:
+      context: ./OrderMS
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo_order
+
+  userms:
+    build:
+      context: ./UserMS
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    depends_on:
+      - mongo_user
+
+  paymentms:
+    build:
+      context: ./PaymentMS
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    depends_on:
+      - mongo_payment
+
+  mongo_order:
+    image: mongo:latest
+    volumes:
+      - "/var/lib/mongodb-order:/data/db"
+    ports:
+      - "27019:27017"
+
+  mongo_user:
+    image: mongo:latest
+    volumes:
+      - "/var/lib/mongodb-user:/data/db"
+    ports:
+      - "27018:27017"
+
+  mongo_payment:
+    image: mongo:latest
+    volumes:
+      - "/var/lib/mongodb-payment:/data/db"
+    ports:
+      - "27020:27017"
+
